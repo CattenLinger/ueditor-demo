@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <mvc:default-servlet-handler />
+
+    <context:component-scan base-package="net.catten.ueditor.demo" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!-- Static resource files -->
+    <mvc:resources mapping="/uploaded-files" location="uploaded-files"/>
+    <mvc:resources mapping="/html" location="html"/>
+    <mvc:resources mapping="/js" location="js"/>
+
+    <!-- SpringMVC上传文件时，需要配置MultipartResolver处理器 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="UTF-8"/>
+        <!-- 指定所上传文件的总大小不能超过200KB。注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和 -->
+        <property name="maxUploadSize" value="2000000"/>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="order" value="1"/>
+        <property name="defaultViews">
+            <list>
+                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="suffix" value=".ftl"/>
+        <property name="contentType" value="text/html;charset=UTF-8"/>
+        <property name="exposeRequestAttributes" value="true"/>
+        <property name="exposeSessionAttributes" value="true"/>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer" id="freeMarkerConfigurer">
+        <property name="templateLoaderPath" value="/WEB-INF/views/"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+
+    <mvc:annotation-driven/>
+
+</beans>
