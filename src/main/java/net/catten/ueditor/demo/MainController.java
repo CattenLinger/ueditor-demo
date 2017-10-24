@@ -3,6 +3,7 @@ package net.catten.ueditor.demo;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
@@ -21,15 +23,35 @@ import java.util.concurrent.TimeUnit;
 public class MainController {
 
     @GetMapping
-    public String index() {
+    public String postArticle() {
         return "index";
     }
 
     @PostMapping("/article/post")
-    public String postArticle(){
-        String filename = "";
+    public String postArticle(@RequestParam("content") String content,HttpServletRequest request) throws IOException {
+        if(!StringUtils.isEmpty(content)){
+            String filename = newFilename(
+                    UUID.randomUUID().toString(),
+                    ".html"
+            );
 
-        return "redirect:/html/" + filename;
+            File file = new File(request.getSession().getServletContext().getRealPath("/html/" + filename));
+            if(!file.exists()) FileUtils.write(file, content);
+
+            return "redirect:/html/" + filename;
+        }else{
+            return "redirect:/";
+        }
+    }
+
+    @GetMapping("/article")
+    public String articles(HttpServletRequest request,Model model){
+        File file = new File(request.getSession().getServletContext().getRealPath("/html"));
+        if(file.exists() && file.isDirectory()){
+            model.addAttribute("files", file.list((dir, name) -> name.endsWith(".html")));
+        }
+
+        return "article";
     }
 
     /*

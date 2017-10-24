@@ -1,12 +1,17 @@
 <html>
 <head>
     <title>UEditor Demo</title>
+    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"/>
 </head>
 <body>
-
     <form method="post" action="/article/post">
-        <!-- 加载编辑器的容器 -->
-        <script id="container" name="content" type="text/plain"></script>
+        <div class="form-group">
+            <!-- 加载编辑器的容器 -->
+            <script id="container" name="content" type="text/plain"></script>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Submit" class="btn btn-success">
+        </div>
     </form>
 
     <!-- 配置文件 -->
