@@ -4,3 +4,6 @@
 /target
 *.log
 *.class
+
+/src/main/webapp/html/*
+/src/main/webapp/uploaded-files/*
