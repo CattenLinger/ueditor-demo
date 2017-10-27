@@ -12,9 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -28,32 +26,31 @@ public class MainController {
     }
 
     @PostMapping("/article/post")
-    public String postArticle(@RequestParam("content") String content,HttpServletRequest request) throws IOException {
-        if(!StringUtils.isEmpty(content)){
+    public String postArticle(@RequestParam("content") String content, HttpServletRequest request) throws IOException {
+        if (!StringUtils.isEmpty(content)) {
             String filename = newFilename(
                     UUID.randomUUID().toString(),
                     ".html"
             );
 
             File file = new File(request.getSession().getServletContext().getRealPath("/html/" + filename));
-            if(!file.exists()) FileUtils.write(file, content);
+            if (!file.exists()) FileUtils.write(file, content);
 
             return "redirect:/html/" + filename;
-        }else{
+        } else {
             return "redirect:/";
         }
     }
 
     @GetMapping("/article")
-    public String articles(HttpServletRequest request,Model model){
+    public String articles(HttpServletRequest request, Model model) {
         File file = new File(request.getSession().getServletContext().getRealPath("/html"));
-        if(file.exists() && file.isDirectory()){
+        if (file.exists() && file.isDirectory()) {
             model.addAttribute("files", file.list((dir, name) -> name.endsWith(".html")));
         }
 
         return "article";
     }
-
     /*
     *
     * Plain old file upload
@@ -82,13 +79,13 @@ public class MainController {
         return "redirect:/file/upload";
     }
 
-    private String newFilename(String... identifies){
+    private String newFilename(String... identifies) {
         StringBuilder builder = new StringBuilder(String.valueOf(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())));
         for (String s : identifies) builder.append(s);
         return builder.toString();
     }
 
-    private String extNameOf(String filename){
+    private String extNameOf(String filename) {
         return filename.substring(filename.lastIndexOf("."));
     }
 }
