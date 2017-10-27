@@ -1,17 +1,17 @@
-<html>
-<head>
-    <title>File upload</title>
-    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"/>
-</head>
-<body>
-<#if files??>
-<ul class="list-group">
-    <#list files as file>
-        <li class="list-group-item"><a href="/html/${file}">${file}</a></li>
-    </#list>
-</ul>
-<#else >
-Empty
-</#if>
-</body>
-</html>
+<#import "temp.ftl" as temp>
+<@temp.body title="Post List">
+<@temp.nav/>
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+        <div class="list-group">
+            <#if files?? && (files?size > 0)>
+                <#list files as file>
+                    <a class="list-group-item" href="/html/${file}">${file}</a>
+                </#list>
+            <#else >
+                <div class="list-group-item disabled">Empty</div>
+            </#if>
+        </div>
+    </div>
+</div>
+</@temp.body>
